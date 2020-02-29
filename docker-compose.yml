@@ -1,0 +1,40 @@
+version: '3'
+services:
+  odoo_web:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    # image: onhout/asctx-odoo:latest
+    # deploy:
+    #   mode: replicated
+    #   replicas: 1
+    #   placement:
+    #     constraints: [node.hostname == ASCTHR2]
+    #   update_config:
+    #     parallelism: 2
+    #     delay: 10s
+    command: tail -f /dev/null
+    environment:
+      - CRON_TIME="0 3 * * sun" 
+      - MYSQL_HOST="mysql"
+      - MYSQL_USER="root"
+      - MYSQL_PASS="ASCthr12345"
+      - POSTGRESQL_HOST="postgres"
+      - TIMEOUT="10s"
+    networks:
+      - test_swarm_proxy
+    volumes:
+      - mysql_backup_volume:/backup
+
+
+volumes:
+  mysql_backup_volume:
+    driver: local
+    driver_opts:
+      type: cifs
+      o: username=peter,password=ASCthr12345,rw,domain=asctherapeutics.com,uid=999,gid=999
+      device: "\\\\192.168.168.1\\Web\\docker\\db_backup\\backups\\mysql"
+
+networks:
+  test_swarm_proxy:
+    external: true
