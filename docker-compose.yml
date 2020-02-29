@@ -1,6 +1,6 @@
 version: '3'
 services:
-  odoo_web:
+  backup:
     # build:
     #   context: .
     #   dockerfile: Dockerfile
@@ -33,5 +33,5 @@ volumes:
       device: "\\\\192.168.168.1\\Web\\docker\\db_backup\\backups\\mysql"
 
 networks:
-  test_swarm_proxy:
+  asc_database:
     external: true
