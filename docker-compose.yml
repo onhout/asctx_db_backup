@@ -11,17 +11,20 @@ services:
       update_config:
         parallelism: 2
         delay: 10s
-    # command: tail -f /dev/null
+      placement:
+        constraints: [node.hostname == ASCTHR2]
+    command: tail -f /dev/null
     environment:
-      - CRON_TIME="0 3 * * sun" 
-      - MYSQL_HOST="mysql"
-      - MYSQL_USER="root"
-      - MYSQL_PASS="ASCthr12345"
-      - POSTGRESQL_HOST="postgres"
+      - CRON_TIME=0 */6 * * *
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASS=wikiwiki
+      - INIT_BACKUP=1
+      - POSTGRESQL_HOST=postgres
     networks:
       - asc_database
     volumes:
-      - mysql_backup_volume:/backup
+      - mysql_backup_volume:/mysql_backup
 
 
 volumes:
