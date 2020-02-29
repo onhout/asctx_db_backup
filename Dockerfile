@@ -8,6 +8,6 @@ ENV CRON_TIME="0 3 * * sun" \
     TIMEOUT="10s"
 
 COPY ["run.sh", "backup.sh", "/"]
-RUN mkdir /mysql_backup && chmod u+x /backup.sh
+RUN mkdir /mysql_backup && chmod u+x /backup.sh /run.sh
 VOLUME ["/mysql_backup"]
 ENTRYPOINT ["/run.sh"]
