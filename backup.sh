@@ -31,7 +31,7 @@ for pdb in ${POSTGRES_DATABASES}
 do
   if [[ "$pdb" != "postgres" ]] && [[ "$pdb" != "root" ]] && [[ "$db" != _* ]]
   then
-    echo "==> Dumping postgres:"
+    echo "==> Dumping postgres: $pdb"
     pg_dump -U $POSTGRESQL_USER -h $POSTGRESQL_HOST > /postgres_backup/$DATE.$pdb.dump
   fi
 done
