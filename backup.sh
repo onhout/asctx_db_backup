@@ -32,7 +32,7 @@ do
   if [[ "$pdb" != "postgres" ]] && [[ "$pdb" != "root" ]] && [[ "$pdb" != "|" ]]
   then
     echo "==> Dumping postgres: $pdb"
-    pg_dump -U $POSTGRESQL_USER -h $POSTGRESQL_HOST > /postgres_backup/$DATE.$pdb.dump
+    pg_dump -U $POSTGRESQL_USER -h $POSTGRESQL_HOST -t $pdb > /postgres_backup/$DATE.$pdb.dump
   fi
 done
 
