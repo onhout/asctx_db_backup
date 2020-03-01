@@ -1,6 +1,8 @@
 FROM alpine:latest
 
-RUN apk add --update bash mysql-client postgresql-client gzip openssl && rm -rf /var/cache/apk/*
+RUN apk add --update bash mysql-client gzip openssl \
+    && apk add --repository http://dl-cdn.alpinelinux.org/alpine/v3.6/main postgresql-client~=9.6
+    && rm -rf /var/cache/apk/*
 
 ENV CRON_TIME="0 3 * * sun" \
     MYSQL_HOST="mysql" \
