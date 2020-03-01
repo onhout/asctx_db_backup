@@ -26,6 +26,9 @@ do
   fi
 done
 
+echo "Dumping postgres:"
+pg_dumpall -U $POSTGRESQL_USER -h $POSTGRESQL_HOST -p 5432 --clean --file=/postgres_backup/$DATE.dump
+
 if [ -n "$MAX_BACKUPS" ]
 then
   MAX_FILES=$(( MAX_BACKUPS * DB_COUNTER ))

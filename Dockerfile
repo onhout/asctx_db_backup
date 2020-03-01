@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --update bash mysql-client gzip openssl && rm -rf /var/cache/apk/*
+RUN apk add --update bash mysql-client postgresql-client gzip openssl && rm -rf /var/cache/apk/*
 
 ENV CRON_TIME="0 3 * * sun" \
     MYSQL_HOST="mysql" \

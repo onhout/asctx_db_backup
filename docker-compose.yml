@@ -15,16 +15,20 @@ services:
         constraints: [node.hostname == ASCTHR2]
     command: tail -f /dev/null
     environment:
-      - CRON_TIME=0 */6 * * *
+      - CRON_TIME=0 */12 * * *
       - MYSQL_HOST=mysql
       - MYSQL_USER=root
       - MYSQL_PASS=wikiwiki
       - INIT_BACKUP=1
+      - MAX_BACKUPS=30
       - POSTGRESQL_HOST=postgres
+      - POSTGRESQL_USER=root
+      - PGPASSWORD=ASCthr12345
     networks:
       - asc_database
     volumes:
       - mysql_backup_volume:/mysql_backup
+      - postgres_backup_volume:/postgres_backup
 
 
 volumes:
@@ -34,6 +38,12 @@ volumes:
       type: cifs
       o: username=peter,password=ASCthr12345,rw,domain=asctherapeutics.com,uid=999,gid=999
       device: "\\\\192.168.168.1\\Web\\docker\\db_backup\\backups\\mysql"
+  postgres_backup_volume:
+    driver: local
+    driver_opts:
+      type: cifs
+      o: username=peter,password=ASCthr12345,rw,domain=asctherapeutics.com,uid=999,gid=999
+      device: "\\\\192.168.168.1\\Web\\docker\\db_backup\\backups\\postgres"
 
 networks:
   asc_database:
