@@ -26,8 +26,15 @@ do
   fi
 done
 
-echo "Dumping postgres:"
-pg_dumpall -U $POSTGRESQL_USER -h $POSTGRESQL_HOST -p 5432 --clean --file=/postgres_backup/$DATE.dump
+POSTGRES_DATABASES=`psql -h $POSTGRESQL_HOST -U $POSTGRESQL_USER -q -c "\l" | sed -n 4,/\eof/p | grep -v rows\) | grep -v template0 | grep -v template1 | awk {'print $1'}`
+for pdb in ${POSTGRES_DATABASES}
+do
+  if [[ "$pdb" != "postgres" ]] && [[ "$pdb" != "root" ]] && [[ "$db" != _* ]]
+  then
+    echo "==> Dumping postgres:"
+    pg_dump -U $POSTGRESQL_USER -h $POSTGRESQL_HOST > /postgres_backup/$DATE.$pdb.dump
+  fi
+done
 
 if [ -n "$MAX_BACKUPS" ]
 then
