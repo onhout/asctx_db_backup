@@ -29,7 +29,7 @@ done
 POSTGRES_DATABASES=`psql -h $POSTGRESQL_HOST -U $POSTGRESQL_USER -q -c "\l" | sed -n 4,/\eof/p | grep -v rows\) | grep -v template0 | grep -v template1 | awk {'print $1'}`
 for pdb in ${POSTGRES_DATABASES}
 do
-  if [[ "$pdb" != "postgres" ]] && [[ "$pdb" != "root" ]] && [[ "$db" != _* ]]
+  if [[ "$pdb" != "postgres" ]] && [[ "$pdb" != "root" ]] && [[ "$db" != "|" ]]
   then
     echo "==> Dumping postgres: $pdb"
     pg_dump -U $POSTGRESQL_USER -h $POSTGRESQL_HOST > /postgres_backup/$DATE.$pdb.dump
@@ -39,9 +39,16 @@ done
 if [ -n "$MAX_BACKUPS" ]
 then
   MAX_FILES=$(( MAX_BACKUPS * DB_COUNTER ))
-  while [ "$(find /backup -maxdepth 1 -name "*.sql.gz" -type f | wc -l)" -gt "$MAX_FILES" ]
+  while [ "$(find /mysql_backup -maxdepth 1 -name "*.sql.gz" -type f | wc -l)" -gt "$MAX_FILES" ]
   do
     TARGET=$(find /mysql_backup -maxdepth 1 -name "*.sql.gz" -type f | sort | head -n 1)
+    echo "==> Max number of backups ($MAX_BACKUPS) reached. Deleting ${TARGET} ..."
+    rm -rf "${TARGET}"
+    echo "==> Backup ${TARGET} deleted"
+  done
+  while [ "$(find /postgres_backup -maxdepth 1 -name "*.dump" -type f | wc -l)" -gt "$MAX_FILES" ]
+  do
+    TARGET=$(find /postgres_backup -maxdepth 1 -name "*.dump -type f | sort | head -n 1)
     echo "==> Max number of backups ($MAX_BACKUPS) reached. Deleting ${TARGET} ..."
     rm -rf "${TARGET}"
     echo "==> Backup ${TARGET} deleted"
